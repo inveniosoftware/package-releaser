@@ -1,7 +1,7 @@
 import re
 # Compiled regular expression pattern
 RE_DEV_STATUS = re.compile(r"(.*)('Development Status ::.*')(.*)")
-RE_INVENIO_DEV_DEP = re.compile(r"(.*)(invenio-.*)(1.0.0)(\.?[ab]+[0-9]{1,2})(.*)")
+RE_INVENIO_DEV_DEP = re.compile(r"(?P<prefix>.*)(?P<invenio>invenio-.*)(?P<ver>1.0.0)(?P<devver>\.?([ab]|dev)+[0-9]+)(?P<suffix>.*)")
 RE_INVENIO_SEARCH_DEV_DEP = re.compile(r"(invenio_)(.*)( = )(.*)(1.0.0)([ab]+[0-9]{1,2})(.*)")
 
 # Constants
@@ -32,8 +32,8 @@ def update_setup_py_invenio_dev_deps(text):
     def dev_dep(line):
         m = re.match(RE_INVENIO_DEV_DEP, line)
         if m:
-            grps = m.groups() # (prefix, invenio-*, 1.0.0, {a,b}{0-9}, suffix)
-            return "{0}{1}{2}{4}".format(*m.groups())  # Skip the 'a3' 'b3', etc.
+            # Skip the 'devver' groups corresponding to 'a3' 'b3' '.dev'
+            return "{prefix}{invenio}{ver}{suffix}".format(**m.groupdict())
         return line
 
     def dev_dep_search(line):

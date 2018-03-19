@@ -50,6 +50,7 @@ def test_invenio_dev_deps():
             'invenio-rest[cors]>=1.0.0a9',
             'invenio-records-ui>=1.0.0a8,<1.1.0',  # Upper-limiter
             'invenio-search>=1.0.0a9'
+            'invenio-base>=1.0.0.dev20160101,<1.1.0',  # strip '.dev<date>'
             'invenio-app-ils>=1.0.0.dev0,<1.1.0',
         ]
 
@@ -74,7 +75,8 @@ def test_invenio_dev_deps():
             'invenio-rest[cors]>=1.0.0',
             'invenio-records-ui>=1.0.0,<1.1.0',  # Upper-limiter
             'invenio-search>=1.0.0'
-            'invenio-app-ils>=1.0.0.dev0,<1.1.0',
+            'invenio-base>=1.0.0,<1.1.0',  # strip '.dev<date>'
+            'invenio-app-ils>=1.0.0,<1.1.0',
         ]
 
         invenio_search_version = '1.0.0'  # comment
