@@ -1,2 +1,3 @@
 pytest
 click
+git+https://github.com/inveniosoftware/metainvenio.git#egg=metainvenio
