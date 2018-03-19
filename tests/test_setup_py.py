@@ -1,4 +1,4 @@
-from utils import remove_setup_py_pypi_classifier
+from utils import update_setup_py_pypi_classifiers
 from textwrap import dedent
 
 def test_pypy_classifier():
@@ -11,7 +11,6 @@ def test_pypy_classifier():
     exp_text1 = """\
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython',
-        'Development Status :: 4 - Beta',"""
-    assert remove_setup_py_pypi_classifier(text1) == exp_text1
-    assert remove_setup_py_pypi_classifier(exp_text1) == exp_text1
-
+        'Development Status :: 5 - Production/Stable',"""
+    assert update_setup_py_pypi_classifiers(text1) == exp_text1
+    assert update_setup_py_pypi_classifiers(exp_text1) == exp_text1
