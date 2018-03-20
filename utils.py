@@ -6,12 +6,16 @@ RE_INVENIO_SEARCH_DEV_DEP = re.compile(r"(invenio_)(.*)( = )(.*)(1.0.0)([ab]+[0-
 
 # Constants
 TROVE_DEV_STATUS = "Development Status :: 5 - Production/Stable"
+PYPY_RE_PATTERN = re.compile(r'(?P<prefix>(.|\s)*)(?P<matrix>matrix:.*\n)(?P<between1>(.|\s)*)(?P<allow_failures>allow_failures:.*\n)(?P<between2>(.|\s)*)(?P<pypy>- python: pypy.*\n)(?P<between3>.*)(?P<suffix>/n(.|\s)*)', re.MULTILINE)
+
 
 def filter_text(text, fn):
     return '\n'.join(filter(fn, text.split('\n')))
 
+
 def map_text(text, fn):
     return '\n'.join(map(fn, text.split('\n')))
+
 
 def remove_setup_py_pypi_classifier(text):
     def pypy_trove(line):
@@ -56,3 +60,16 @@ def update_setup_py_pypi_classifiers(text):
         text = fn(text)
     return text
 
+
+def remove_pypy_from_travis_yml(text, pattern=PYPY_RE_PATTERN):
+    "Remove pypy dependencies from travis.yml file."
+
+    def pypy_trove(line):
+        return '- "pypy"' not in line
+
+    text = filter_text(text, pypy_trove)
+    match = re.search(pattern, text)
+    groupdict = match.groupdict()
+    print(groupdict)
+
+    return text
