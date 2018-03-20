@@ -3,15 +3,19 @@ import re
 RE_DEV_STATUS = re.compile(r"(.*)('Development Status ::.*')(.*)")
 RE_INVENIO_DEV_DEP = re.compile(r"(?P<prefix>.*)(?P<invenio>invenio-.*)(?P<ver>1.0.0)(?P<devver>\.?([ab]|dev)+[0-9]+)(?P<suffix>.*)")
 RE_INVENIO_SEARCH_DEV_DEP = re.compile(r"(invenio_)(.*)( = )(.*)(1.0.0)([ab]+[0-9]{1,2})(.*)")
+RE_INVENIO_VERSION_PY = re.compile(r"(__version__)( = )(.*)(1.0.0)([ab]+[0-9]{1,2})(.*)")
 
 # Constants
 TROVE_DEV_STATUS = "Development Status :: 5 - Production/Stable"
 
+
 def filter_text(text, fn):
     return '\n'.join(filter(fn, text.split('\n')))
 
+
 def map_text(text, fn):
     return '\n'.join(map(fn, text.split('\n')))
+
 
 def remove_setup_py_pypi_classifier(text):
     def pypy_trove(line):
@@ -56,3 +60,15 @@ def update_setup_py_pypi_classifiers(text):
         text = fn(text)
     return text
 
+
+def change_version_py(text):
+    "Change the version to '1.0.0' in every version.py file"
+    new_text = []
+    for line in text.split('\n'):
+        m = re.search(RE_INVENIO_VERSION_PY, line)
+        if m:
+            new_text.append("{0}{1}{2}{3}{5}".format(*m.groups()))
+        else:
+            new_text.append(line)
+
+    return '\n'.join(new_text)
